@@ -1,22 +1,25 @@
 import React, {useEffect, useReducer} from 'react';
 import store from '../common/store';
 import {getNextFriend} from '../common/mockData';
-import {addFriend, setAgeLimit, setShowLimit}from './state';
+import {addFriend, setAgeLimit, setShowLimit}from '../state/state';
 import FriendList from './FriendList';
+import {getAgeLimit, getShowLimit, getFriendsWithAgeLimit,getFriendsWithAgeShowLimit}from '../state/selector';
 import {useDispatch, useSelector, shallowEqual} from 'react-redux';
 import NumberSelect from './NumberSelect';
 import { MAX_AGE_LIMIT,MAX_SHOW_LIMIT } from './common';
+
 
 export default function FriendMain(){
     const [
         ageLimit,showLimit,
         friendsWithAgeLimit,
         friendsWithAgeShowLimit
-    ]=useSelector(state=>{
-        const {ageLimit,showLimit, friends} = state.friend;
-        const friendsWithAgeLimit=friends.filter(item=>item.age<=ageLimit);
-        return [ageLimit,showLimit,friendsWithAgeLimit,friendsWithAgeLimit.slice(0,showLimit)];
-    },shallowEqual);
+    ]=useSelector(state=>[
+        getAgeLimit(state),
+        getShowLimit(state),
+        getFriendsWithAgeLimit(state),
+        getFriendsWithAgeShowLimit(state),
+       ],shallowEqual);
     const dispatch=useDispatch();
     function onAdd(){
         const friend=getNextFriend();
